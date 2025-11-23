@@ -46,9 +46,6 @@ A modular breakdown of the codebase.
 
 ---
 
-
-<img width="3136" height="1550" alt="Image" src="https://github.com/user-attachments/assets/aca46760-6f2f-407c-b9fe-aa7036e448ea" />
-<img width="3122" height="1534" alt="Image" src="https://github.com/user-attachments/assets/48c5b48f-b304-4e77-84b3-95164c032f86" />
 ### 🎛️ Configuration
 
 You can tweak the simulation in `index.html` to change the aesthetics and physics:
@@ -68,3 +65,9 @@ You can tweak the simulation in `index.html` to change the aesthetics and physic
 4.  **Observe** the real-time visual and auditory polyrhythmic interaction.
 
 ---
+
+## 🙌 Author
+
+Made with ❤️ by Vishal Prajwal S
+
+If you like this project, please ⭐ star the repo — it helps a lot!
