@@ -6,6 +6,16 @@
     <title>Polyrhythm</title>
 </head>
 <body>  
+    <div id="start-overlay" style="
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(0, 0, 0, 0.85); display: flex; flex-direction: column;
+        justify-content: center; align-items: center; cursor: pointer; z-index: 999; 
+        transition: opacity 0.6s ease; color: white; font-family: sans-serif;
+    ">
+        <div style="font-size: 4rem; opacity: 0.9; text-shadow: 0 0 20px #fff;">▶</div>
+        <div style="margin-top: 20px; letter-spacing: 3px; text-transform: uppercase; opacity: 0.7;">Initialize Harmony</div>
+    </div>
+
     <canvas id="myCanvas" style="background-color:black">
 
     </canvas>
@@ -13,11 +23,109 @@
     <script src="sound.js"></script>
     <script src="track.js"></script>
     <script src="ball.js"></script>
+
+
+    <script>
+    // --- CONFIGURATION ---
+    const size = 1800;
+    const myCanvas = document.getElementById('myCanvas');
+    myCanvas.width = size;
+    myCanvas.height = size / 2;
+
+    const trackCenter = { x: size / 2 , y: size / 2};
+    const trackMinRadius = 450;
+    const trackStep = 20;
+    const ballRadius = 8;
+    const ballMinSpeed = 0.02;
+    const ballSpeedStep = -0.0001;
+
+    // Musical notes frequencies
+    const soundFrequencies = [
+        261.63, 293.66, 329.63, 349.23, 392.00, 440.00, 493.88, 
+        523.25, 587.33, 659.25, 698.46, 783.99, 880.00, 987.77, 
+        1046.50, 1174.66, 1318.51, 1396.91, 1567.98, 1760.00
+    ];
+
+    const tracks = [];
+    const balls = [];
+    const N = 20;
+
+    // --- INITIALIZATION ---
+    for (let i = 0; i < N; i++) {
+        const trackRadius = trackMinRadius + i * trackStep;
+        const ballSpeed = ballMinSpeed + i * ballSpeedStep;
+        const ballSoundFrequency = soundFrequencies[i];
+        
+        // NEW: Cyberpunk Palette (Cyan to Magenta gradient)
+        const hue = 170 + (i * 140) / N; 
+        
+        const track = new Track(trackCenter, trackRadius, hue);
+        const ball = new Ball(track, ballRadius, ballSpeed, ballSoundFrequency, hue);
+        tracks.push(track);
+        balls.push(ball);
+    }
+
+    const ctx = myCanvas.getContext("2d");
+    const overlay = document.getElementById('start-overlay');
+    let isRunning = false;
+
+    // --- RENDER INITIAL STATE (STATIC) ---
+    // This draws the scene once so it isn't empty behind the overlay
+    tracks.forEach((track) => track.draw(ctx));
+    balls.forEach((ball) => ball.draw(ctx));
+
+    // --- INTERACTION HANDLER ---
+    overlay.addEventListener('click', () => {
+        if (isRunning) return; // Prevent double clicks
+        
+        isRunning = true;
+        
+        // 1. Resume Audio Context (Browser requirement)
+        if (typeof audioCtx !== 'undefined' && audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+
+        // 2. Fade out overlay
+        overlay.style.opacity = '0';
+        setTimeout(() => { overlay.style.display = 'none'; }, 600);
+
+        // 3. Start the Animation Loop
+        animate();
+    });
+
+    // --- ANIMATION LOOP ---
+    function animate() {
+        ctx.clearRect(0, 0, size, size);
+        tracks.forEach((track) => track.draw(ctx));
+        balls.forEach((ball) => ball.move());
+        balls.forEach((ball) => ball.draw(ctx));
+        requestAnimationFrame(animate);
+    }
+</script>
+
+
+<!-- 
     <script>
         const size = 1800;
         myCanvas.width = size;
         myCanvas.height = size / 2;
 
+        // Get the overlay element
+const overlay = document.getElementById('start-overlay');
+
+// Add click listener to start audio and hide overlay
+overlay.addEventListener('click', () => {
+    // Resume the AudioContext (defined in sound.js)
+    if (typeof audioCtx !== 'undefined' && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+    }
+    
+    // Fade out and remove the overlay
+    overlay.style.opacity = '0';
+    setTimeout(() => {
+        overlay.style.display = 'none';
+    }, 500);
+});
 
         const trackCenter = { x: size / 2 , y: size / 2}
         const trackMinRadius = 450
@@ -61,6 +169,7 @@
             requestAnimationFrame(animate);
         }
     </script>
+     -->
 </body>
 
 </html>
