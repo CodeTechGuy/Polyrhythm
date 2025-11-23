@@ -14,16 +14,16 @@
     <script src="track.js"></script>
     <script src="ball.js"></script>
     <script>
-        const size = 700;
+        const size = 1800;
         myCanvas.width = size;
-        myCanvas.height = size;
+        myCanvas.height = size / 2;
 
 
         const trackCenter = { x: size / 2 , y: size / 2}
-        const trackMinRadius = 100
-        const trackStep = 15
-        const ballRadius = 10
-        const ballMinSpeed = 0.01;
+        const trackMinRadius = 450
+        const trackStep = 20
+        const ballRadius = 8
+        const ballMinSpeed = 0.02;
         const ballSpeedStep = -0.0001;
 
 
@@ -40,9 +40,10 @@
         for (let i=0 ; i<N ; i++){
             const trackRadius = trackMinRadius + i * trackStep;
             const ballSpeed = ballMinSpeed + i * ballSpeedStep;
-            const ballSoundFrequency = soundFrequencies[i]
-            const track = new Track(trackCenter , trackRadius);
-            const ball = new Ball(track, ballRadius , ballSpeed , ballSoundFrequency);
+            const ballSoundFrequency = soundFrequencies[i];
+            const hue = (i * 360) / N;
+            const track = new Track(trackCenter , trackRadius , hue);
+            const ball = new Ball(track, ballRadius , ballSpeed , ballSoundFrequency , hue);
             tracks.push(track)
             balls.push(ball)
         }
